@@ -70,15 +70,16 @@ public class ShopManagementController {
 		return shopManagementService.searchShopsNearBy(shopNearAddress);
 	}
 
-	@RequestMapping(value="sendEmail", method=RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
-	public void sendEmail(@RequestBody ShopDetails shopDetails, @RequestPart MultipartFile[] files) throws JsonParseException, JsonMappingException, IOException {
-		System.out.println("shopDetails files is : "+files);	
+	@ApiParam(name = "files", value = "Select the file to Upload", required = false, allowMultiple=true)  
+	@RequestMapping(value="sendEmail", method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public void sendEmail(@RequestParam String shopName, @RequestPart MultipartFile[] files) throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("shopDetails files is : "+files);
+		System.out.println("shopDetails files is : "+files.length);
 		//ShopDetails shopDetails2 = new ObjectMapper().readValue(shopDetails, ShopDetails.class);
-		System.out.println("shopDetails Object is : "+shopDetails.toString());
-		if(null != files && files.length > 0) {
-			for(MultipartFile file : files) {
-				System.out.println("Each File name is: "+file.getOriginalFilename());
-			}
-		}
+		System.out.println("shopDetails Object is : "+shopName);
+		Arrays.asList(files).stream().forEach(file -> 
+         	{
+        	System.out.println(file.getOriginalFilename());
+        	});
 	}
 }
