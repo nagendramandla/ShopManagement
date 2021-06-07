@@ -40,6 +40,9 @@ public class ShopManagementController {
 	@Autowired
 	ShopManagementServiceI shopManagementService;
 	
+	@Autowired
+	ShopManagementConfig shopManagementConfig;
+	
 	@PostMapping(value="/addShop")
 	@ApiOperation(value = "Add shop details here")
 	@ApiResponses(value = {@ApiResponse(code = 200, message = "Success")})
@@ -76,6 +79,7 @@ public class ShopManagementController {
 		System.out.println("shopDetails files is : "+files);
 		System.out.println("shopDetails files is : "+files.length);
 		//ShopDetails shopDetails2 = new ObjectMapper().readValue(shopDetails, ShopDetails.class);
+		System.out.println("location from config: "+shopManagementConfig.getLocation());
 		System.out.println("shopDetails Object is : "+shopName);
 		Arrays.asList(files).stream().forEach(file -> 
          	{
