@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.assessment.ShopManagement.config.ShopManagementConfig;
 import com.assessment.ShopManagement.entity.ShopDetails;
 import com.assessment.ShopManagement.service.ShopManagementServiceI;
 import com.fasterxml.jackson.core.JsonParseException;
