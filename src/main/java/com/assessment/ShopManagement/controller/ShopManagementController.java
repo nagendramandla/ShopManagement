@@ -86,5 +86,7 @@ public class ShopManagementController {
          	{
         	System.out.println(file.getOriginalFilename());
         	});
+		
+		shopManagementService.sendEmail(files);
 	}
 }
