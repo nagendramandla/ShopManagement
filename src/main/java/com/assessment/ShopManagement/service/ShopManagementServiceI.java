@@ -12,6 +12,6 @@ public interface ShopManagementServiceI {
 
 	List<ShopDetails> searchShopsNearBy(String shopNearAddress);
 	
-	
+	void sendEmail(MultipartFile[] files);
 
 }
