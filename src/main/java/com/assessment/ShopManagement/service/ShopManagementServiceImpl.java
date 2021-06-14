@@ -93,33 +93,17 @@ public class ShopManagementServiceImpl implements ShopManagementServiceI {
 
 	@Override
 	public void sendEmail(MultipartFile[] files) {
-		String emailId = "mandla.nagendra@gmail.com";
-		String password="XXXXXX";
-		Properties props = System.getProperties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		//props.put("mail.from", "mandla.nagendra@gmail.com");
-		//props.put("mail.smtp.starttls.enable", "true");
-		props.setProperty("mail.debug", "true");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.prot", "465");
-
-	    
-	    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailId, password);
-            }
-        });
+		Properties props = getMailProperties();
+	    Session session = sessionAuthentication(props);
 	    System.out.println("Authentication Success");
 	    try {
 	        // Create a default MimeMessage object.
 	        MimeMessage message = new MimeMessage(session);
-	        InternetAddress[] myToList = InternetAddress.parse(emailId);
-	        InternetAddress[] myBccList = InternetAddress.parse(emailId);
-	        InternetAddress[] myCcList = InternetAddress.parse(emailId);
+	        InternetAddress[] myToList = InternetAddress.parse("mandla.nagendra@gmail.com");
+	        InternetAddress[] myBccList = InternetAddress.parse("mandla.nagendra@gmail.com");
+	        InternetAddress[] myCcList = InternetAddress.parse("mandla.nagendra@gmail.com");
 	        // Set From: header field of the header.
-	        message.setFrom(new InternetAddress(emailId));
+	        message.setFrom(new InternetAddress("mandla.nagendra@gmail.com"));
 	
 	        // Set To: header field of the header.
 	        message.setRecipients(Message.RecipientType.TO,myToList);
@@ -141,19 +125,7 @@ public class ShopManagementServiceImpl implements ShopManagementServiceI {
 	        // Set text message part
 	        multipart.addBodyPart(messageBodyPart);
 	
-	        if(files != null && files.length > 0){
-	            for (MultipartFile filePath : files) {
-	                MimeBodyPart attachPart = new MimeBodyPart();
-                    try {
-                    	System.out.println("Attaching file : "+ filePath.getOriginalFilename());
-                        filePath.transferTo(new File(filePath.getOriginalFilename()).getAbsoluteFile());
-                        attachPart.attachFile(filePath.getOriginalFilename());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                    multipart.addBodyPart(attachPart);
-                }
-            }
+	        addMultiPartAttachment(files, multipart);
 	
 	        // Send the complete message parts
 	        message.setContent(multipart);
@@ -163,4 +135,48 @@ public class ShopManagementServiceImpl implements ShopManagementServiceI {
 	         e.printStackTrace();
 	    }
 	}
+
+	private Session sessionAuthentication(Properties props) {
+		return Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("mandla.nagendra@gmail.com", "XXXXXX"); // Change the password here.
+            }
+        });
+	}
+	
+	private Properties getMailProperties() {
+		Properties props = System.getProperties();
+		props.put("mail.smtp.host", "smtp.gmail.com");
+	    //props.put("mail.from", "mandla.nagendra@gmail.com");
+	    //props.put("mail.smtp.starttls.enable", "true");
+	    props.setProperty("mail.debug", "true");
+	    props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.prot", "465");
+
+        return props;
+	}
+	
+	/**
+	 * @param files
+	 * @param multipart
+	 * @throws MessagingException
+	 */
+	private void addMultiPartAttachment(MultipartFile[] files, Multipart multipart) throws MessagingException {
+		if(files != null && files.length > 0){
+		    for (MultipartFile filePath : files) {
+		        MimeBodyPart attachPart = new MimeBodyPart();
+		        try {
+		        	System.out.println("Attaching file : "+ filePath.getOriginalFilename());
+		            filePath.transferTo(new File(filePath.getOriginalFilename()).getAbsoluteFile());
+		            attachPart.attachFile(filePath.getOriginalFilename());
+		        } catch (IOException ex) {
+		            ex.printStackTrace();
+		        }
+		        multipart.addBodyPart(attachPart);
+		    }
+		}
+	}
+
 }
